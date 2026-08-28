@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PS99 Restock Bot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0f0e;
+    --surface: #101615;
+    --surface-2: #161e1c;
+    --line: #223330;
+    --teal: #35e0c9;
+    --teal-dim: #1d7d70;
+    --amber: #f2b705;
+    --text: #e9f5f2;
+    --text-muted: #7d938e;
+    --mono: 'IBM Plex Mono', ui-monospace, monospace;
+    --display: 'Space Grotesk', sans-serif;
+    --body: 'Inter', sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    line-height: 1.55;
+  }
+
+  a { color: inherit; }
+
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ---------- HERO ---------- */
+
+  .hero {
+    padding: 96px 0 72px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--teal);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--teal);
+    box-shadow: 0 0 8px var(--teal);
+    animation: pulse 2.2s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dot, .readout-value { animation: none !important; }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
+  }
+
+  h1 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(34px, 5.5vw, 52px);
+    line-height: 1.08;
+    margin: 0 0 20px;
+    letter-spacing: -0.01em;
+  }
+
+  h1 span { color: var(--teal); }
+
+  .sub {
+    font-size: 17px;
+    color: var(--text-muted);
+    max-width: 46ch;
+    margin: 0 0 40px;
+  }
+
+  /* ---------- READOUT (signature element) ---------- */
+
+  .readout {
+    display: inline-flex;
+    align-items: center;
+    gap: 18px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 18px 24px;
+    margin-bottom: 44px;
+  }
+
+  .readout-label {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .readout-value {
+    font-family: var(--mono);
+    font-weight: 600;
+    font-size: 22px;
+    color: var(--teal);
+    animation: flicker 4.8s steps(1) infinite;
+  }
+
+  @keyframes flicker {
+    0%, 22% { content: ""; }
+  }
+
+  .readout-status {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--amber);
+    border-left: 1px solid var(--line);
+    padding-left: 18px;
+  }
+
+  .cta-row {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: 15px;
+    text-decoration: none;
+    padding: 13px 26px;
+    border-radius: 8px;
+    display: inline-block;
+  }
+
+  .btn-primary {
+    background: var(--teal);
+    color: #04120f;
+  }
+
+  .btn-secondary {
+    border: 1px solid var(--line);
+    color: var(--text);
+  }
+
+  .fine {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 16px;
+  }
+
+  /* ---------- REQUIREMENTS ---------- */
+
+  .reqs {
+    padding: 56px 0;
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  @media (max-width: 640px) {
+    .reqs { grid-template-columns: 1fr; }
+  }
+
+  .req h3 {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--teal);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 8px;
+  }
+
+  .req p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  /* ---------- STEPS ---------- */
+
+  .steps {
+    padding: 64px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .steps h2 {
+    font-family: var(--display);
+    font-size: 26px;
+    margin: 0 0 36px;
+  }
+
+  .step {
+    display: flex;
+    gap: 20px;
+    padding: 22px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .step:last-child { border-bottom: 1px solid var(--line); }
+
+  .step-n {
+    font-family: var(--mono);
+    color: var(--teal-dim);
+    font-size: 14px;
+    padding-top: 2px;
+    min-width: 22px;
+  }
+
+  .step-body h4 {
+    margin: 0 0 6px;
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: 16px;
+  }
+
+  .step-body p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  .step-body code {
+    font-family: var(--mono);
+    background: var(--surface-2);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 13px;
+    color: var(--teal);
+  }
+
+  /* ---------- FOOTER ---------- */
+
+  footer {
+    padding: 48px 0 64px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  footer .brand {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  footer .links {
+    display: flex;
+    gap: 24px;
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+
+  footer .links a {
+    color: var(--teal);
+    text-decoration: none;
+  }
+</style>
+</head>
+<body>
+
+  <div class="wrap">
+
+    <section class="hero">
+      <div class="eyebrow"><span class="dot"></span> BOOTH MONITOR — ACTIVE</div>
+
+      <h1>Your booth,<br>on <span>autopilot</span>.</h1>
+
+      <p class="sub">
+        A Discord-controlled bot for Pet Simulator 99 that prices your
+        Huges off live RAP and Cosmic Value, lists them for you, and
+        pauses itself the moment your booth fills up.
+      </p>
+
+      <div class="readout">
+        <div>
+          <div class="readout-label">booth</div>
+          <div class="readout-value">23 / 25</div>
+        </div>
+        <div class="readout-status">RUNNING</div>
+      </div>
+
+      <div class="cta-row">
+        <a class="btn btn-primary" href="https://github.com/YOUR-USERNAME/YOUR-REPO/archive/refs/heads/main.zip">Download ZIP</a>
+        <a class="btn btn-secondary" href="https://github.com/YOUR-USERNAME/YOUR-REPO">View on GitHub</a>
+      </div>
+
+      <div class="fine">No install script runs on this page — you run it locally, on your own machine.</div>
+    </section>
+
+    <section class="reqs">
+      <div class="req">
+        <h3>OS</h3>
+        <p>Windows 10 or 11. Reads your screen and moves your mouse, so it can't run headless or in the cloud.</p>
+      </div>
+      <div class="req">
+        <h3>Runtime</h3>
+        <p>Python 3.10+. The installer script grabs every package the bot needs on first run.</p>
+      </div>
+      <div class="req">
+        <h3>Accounts</h3>
+        <p>Your own Discord bot application and a BIG Games developer app — both free, both covered below.</p>
+      </div>
+    </section>
+
+    <section class="steps">
+      <h2>Getting it running</h2>
+
+      <div class="step">
+        <div class="step-n">01</div>
+        <div class="step-body">
+          <h4>Download and unzip</h4>
+          <p>Grab the ZIP above, extract it anywhere — a folder on your Desktop is fine.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-n">02</div>
+        <div class="step-body">
+          <h4>Run <code>run.bat</code></h4>
+          <p>Double-click it. First launch installs everything automatically, then asks four setup questions in plain English.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-n">03</div>
+        <div class="step-body">
+          <h4>Follow the full guide once</h4>
+          <p>Creating your Discord bot and BIG Games app takes about ten minutes the first time. <code>README.md</code> in the repo walks through every click.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-n">04</div>
+        <div class="step-body">
+          <h4>Authorize and go</h4>
+          <p>Type <code>/authorize</code> in Discord, approve access, and the status window on your desktop takes it from there.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="brand">ps99-restock-bot</div>
+      <div class="links">
+        <a href="https://github.com/YOUR-USERNAME/YOUR-REPO">Repository</a>
+        <a href="https://github.com/YOUR-USERNAME/YOUR-REPO/blob/main/README.md">Full guide</a>
+        <a href="https://github.com/YOUR-USERNAME/YOUR-REPO/issues">Issues</a>
+      </div>
+    </footer>
+
+  </div>
+
+</body>
+</html>

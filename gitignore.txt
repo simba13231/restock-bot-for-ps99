@@ -1,0 +1,10 @@
+# Personal credentials — never commit these
+.env
+
+# Python
+__pycache__/
+*.pyc
+
+# Debug screenshots from /boothcap
+boothcap_debug.png
+boothcap_debug_processed.png

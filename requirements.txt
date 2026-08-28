@@ -1,0 +1,8 @@
+discord.py
+pyautogui
+requests
+python-dotenv
+pydirectinput
+beautifulsoup4
+winocr
+Pillow
