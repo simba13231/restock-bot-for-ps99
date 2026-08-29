@@ -1,5 +1,7 @@
 # PS99 Restock Bot
 
+# If you need any help dm @miou2251 on discord or @mioutheking.1 on tiktok
+
 A Discord-controlled bot for Pet Simulator 99 that prices your
 Huges off live RAP and Cosmic Value, lists them automatically, and
 pauses itself the moment your booth fills up — with a small
