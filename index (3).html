@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PS99 Restock Bot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0a1f;
+    --surface: #171233;
+    --surface-2: #1f1a42;
+    --line: #332b5e;
+    --pink: #ff6ec7;
+    --purple: #8a6bff;
+    --cyan: #3ce8e8;
+    --gradient: linear-gradient(135deg, var(--pink), var(--purple), var(--cyan));
+    --text: #f3efff;
+    --text-muted: #9a90c2;
+    --mono: 'IBM Plex Mono', ui-monospace, monospace;
+    --display: 'Baloo 2', sans-serif;
+    --body: 'Inter', sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(138, 107, 255, 0.35), transparent),
+      radial-gradient(ellipse 700px 500px at 110% 10%, rgba(60, 232, 232, 0.18), transparent),
+      var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    line-height: 1.55;
+  }
+
+  a { color: inherit; }
+
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ---------- HERO ---------- */
+
+  .hero {
+    padding: 88px 0 64px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--bg);
+    background: var(--gradient);
+    padding: 6px 14px;
+    border-radius: 999px;
+    margin-bottom: 28px;
+    font-weight: 600;
+  }
+
+  h1 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(36px, 6vw, 54px);
+    line-height: 1.05;
+    margin: 0 0 20px;
+  }
+
+  h1 .grad {
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .sub {
+    font-size: 17px;
+    color: var(--text-muted);
+    max-width: 46ch;
+    margin: 0 0 40px;
+  }
+
+  /* ---------- READOUT CARD (signature element) ---------- */
+
+  .activity {
+    display: inline-block;
+    padding: 2px;
+    border-radius: 18px;
+    background: var(--gradient);
+    margin-bottom: 44px;
+  }
+
+  .activity-inner {
+    background: var(--surface);
+    border-radius: 16px;
+    padding: 20px 26px;
+    min-width: 300px;
+  }
+
+  .activity-line {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    font-family: var(--mono);
+    font-size: 13px;
+    padding: 4px 0;
+  }
+
+  .activity-check {
+    color: var(--cyan);
+    font-weight: 600;
+  }
+
+  .activity-text {
+    color: var(--text-muted);
+  }
+
+  .activity-text b {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .activity-line:last-child .activity-text b {
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .cta-row {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 15px;
+    text-decoration: none;
+    padding: 14px 28px;
+    border-radius: 999px;
+    display: inline-block;
+  }
+
+  .btn-primary {
+    background: var(--gradient);
+    color: var(--bg);
+    box-shadow: 0 0 32px rgba(138, 107, 255, 0.45);
+  }
+
+  .btn-secondary {
+    border: 1.5px solid var(--line);
+    color: var(--text);
+  }
+
+  .fine {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 18px;
+  }
+
+  /* ---------- REQUIREMENTS ---------- */
+
+  .reqs {
+    padding: 52px 0;
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  @media (max-width: 640px) {
+    .reqs { grid-template-columns: 1fr; }
+  }
+
+  .req {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 20px;
+  }
+
+  .req h3 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 15px;
+    margin: 0 0 8px;
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .req p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  /* ---------- STEPS ---------- */
+
+  .steps {
+    padding: 60px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .steps h2 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 28px;
+    margin: 0 0 32px;
+  }
+
+  .step {
+    display: flex;
+    gap: 20px;
+    padding: 20px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .step:last-child { border-bottom: 1px solid var(--line); }
+
+  .step-n {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 15px;
+    padding-top: 2px;
+    min-width: 28px;
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .step-body h4 {
+    margin: 0 0 6px;
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 16px;
+  }
+
+  .step-body p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  .step-body code {
+    font-family: var(--mono);
+    background: var(--surface-2);
+    padding: 2px 7px;
+    border-radius: 5px;
+    font-size: 13px;
+    color: var(--cyan);
+  }
+
+  /* ---------- FOOTER ---------- */
+
+  footer {
+    padding: 44px 0 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  footer .brand {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  footer .links {
+    display: flex;
+    gap: 22px;
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+
+  footer .links a {
+    color: var(--cyan);
+    text-decoration: none;
+  }
+</style>
+</head>
+<body>
+
+  <div class="wrap">
+
+    <section class="hero">
+      <div class="eyebrow">★ Secret drop</div>
+
+      <h1>Your booth,<br>on <span class="grad">autopilot</span>.</h1>
+
+      <p class="sub">
+        A Discord-controlled bot for Pet Simulator 99 that prices your
+        Huges off live RAP and Cosmic Value, lists them for you, and
+        refills the booth itself the moment it hits empty.
+      </p>
+
+      <div class="activity">
+        <div class="activity-inner">
+          <div class="activity-line">
+            <span class="activity-check">✓</span>
+            <span class="activity-text">Detected empty booth</span>
+          </div>
+          <div class="activity-line">
+            <span class="activity-check">✓</span>
+            <span class="activity-text">Pulled inventory — <b>6 Huges found</b></span>
+          </div>
+          <div class="activity-line">
+            <span class="activity-check">✓</span>
+            <span class="activity-text">Priced off RAP / Cosmic Value</span>
+          </div>
+          <div class="activity-line">
+            <span class="activity-check">✓</span>
+            <span class="activity-text"><b>Booth refilled — back online</b></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="cta-row">
+        <a id="link-download" class="btn btn-primary" href="#">Download ZIP</a>
+        <a id="link-repo" class="btn btn-secondary" href="#">View on GitHub</a>
+      </div>
+
+      <div class="fine">No install script runs on this page — you run it locally, on your own machine.</div>
+    </section>
+
+    <section class="reqs">
+      <div class="req">
+        <h3>OS</h3>
+        <p>Windows 10 or 11. Reads your screen and moves your mouse, so it can't run headless or in the cloud.</p>
+      </div>
+      <div class="req">
+        <h3>Runtime</h3>
+        <p>Python 3.10+. The installer script grabs every package the bot needs on first run.</p>
+      </div>
+      <div class="req">
+        <h3>Accounts</h3>
+        <p>Your own Discord bot application and a BIG Games developer app — both free, both covered below.</p>
+      </div>
+    </section>
+
+    <section class="steps">
+      <h2>Getting it running</h2>
+
+      <div class="step">
+        <div class="step-n">01</div>
+        <div class="step-body">
+          <h4>Download and unzip</h4>
+          <p>Grab the ZIP above, extract it anywhere — a folder on your Desktop is fine.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-n">02</div>
+        <div class="step-body">
+          <h4>Run <code>run.bat</code></h4>
+          <p>Double-click it. First launch installs everything automatically, then asks four setup questions in plain English.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-n">03</div>
+        <div class="step-body">
+          <h4>Follow the full guide once</h4>
+          <p>Creating your Discord bot and BIG Games app takes about ten minutes the first time. <code>README.md</code> in the repo walks through every click.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-n">04</div>
+        <div class="step-body">
+          <h4>Authorize and go</h4>
+          <p>Type <code>/authorize</code> in Discord, approve access, and the status window on your desktop takes it from there.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="brand">ps99-restock-bot</div>
+      <div class="links">
+        <a id="link-footer-repo" href="#">Repository</a>
+        <a id="link-footer-readme" href="#">Full guide</a>
+        <a id="link-footer-issues" href="#">Issues</a>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    // Every link on this page points at "wherever this page
+    // is currently hosted" instead of a hardcoded username/
+    // repo — figured out from the page's own URL, since
+    // GitHub Pages always serves from
+    // https://<username>.github.io/<repo>/
+    (function () {
+      var host = window.location.hostname; // e.g. simba13231.github.io
+      var path = window.location.pathname; // e.g. /restock-bot-for-ps99/
+
+      var githubIoSuffix = ".github.io";
+
+      if (host.indexOf(githubIoSuffix) === -1) {
+        console.warn(
+          "Not being served from a *.github.io domain — " +
+          "can't auto-detect the repo, links left disabled."
+        );
+        return;
+      }
+
+      var username = host.slice(0, host.indexOf(githubIoSuffix));
+
+      var repo = path.split("/").filter(Boolean)[0];
+
+      if (!username || !repo) {
+        console.warn(
+          "Could not determine username/repo from the URL " +
+          "(" + host + path + ") — links left disabled."
+        );
+        return;
+      }
+
+      var base = "https://github.com/" + username + "/" + repo;
+
+      var links = {
+        "link-download": base + "/archive/refs/heads/main.zip",
+        "link-repo": base,
+        "link-footer-repo": base,
+        "link-footer-readme": base + "/blob/main/README.md",
+        "link-footer-issues": base + "/issues"
+      };
+
+      for (var id in links) {
+        var el = document.getElementById(id);
+        if (el) {
+          el.href = links[id];
+        }
+      }
+    })();
+  </script>
+
+</body>
+</html>
